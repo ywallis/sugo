@@ -6,7 +6,17 @@ import (
 	"time"
 )
 
-func timer(duration time.Duration, cycleType string, iteration int) {
+func timer(config config, cycleType string, iteration int) {
+
+	var duration time.Duration
+	switch cycleType {
+	case "Work":
+		duration = config.workCycleLength
+	case "Break":
+		duration = config.smallBreakLength
+	case "Long break":
+		duration = config.longBreakLength
+	}
 
 	// Weird ass screen clear
 	fmt.Print("\033[H\033[2J")
@@ -23,7 +33,7 @@ func timer(duration time.Duration, cycleType string, iteration int) {
 		minutes := remaining / 60
 		seconds := remaining % 60
 
-		barLength := 30
+		barLength := config.barLength
 		filled := barLength * elapsed / totalSeconds
 		empty := barLength - filled
 		var color string
@@ -43,15 +53,23 @@ func timer(duration time.Duration, cycleType string, iteration int) {
 			resetColor,
 			strings.Repeat("░", empty),
 		)
-
-		fmt.Printf(
-			"\r%s %d - %02d:%02d [%s]",
-			cycleType,
-			iteration,
-			minutes,
-			seconds,
-			bar,
-		)
+		if cycleType == "Long break" {
+			fmt.Printf(
+				"\r%s - %02d:%02d [%s]",
+				cycleType,
+				minutes,
+				seconds,
+				bar)
+		} else {
+			fmt.Printf(
+				"\r%s %d of %d - %02d:%02d [%s]",
+				cycleType,
+				iteration,
+				config.cycles,
+				minutes,
+				seconds,
+				bar)
+		}
 
 		if remaining < 0 {
 			break

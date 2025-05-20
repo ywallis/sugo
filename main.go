@@ -1,46 +1,49 @@
 package main
 
 import (
+	"flag"
 	"log"
-	"os"
-	"strconv"
 	"time"
 )
 
 type config struct {
-	work_cycle_length  time.Duration
-	small_break_length time.Duration
-	long_break_length  time.Duration
-	cycles             int
+	workCycleLength  time.Duration
+	smallBreakLength time.Duration
+	longBreakLength  time.Duration
+	cycles           int
+	barLength        int
 }
 
 func main() {
-	cfg := config{}
-	cfg.work_cycle_length = time.Minute * 1
-	cfg.small_break_length = time.Minute * 5
-	cfg.long_break_length = time.Minute * 25
+	workCycleLength := flag.Int("work", 25, "The minutes in a work cycle")
+	smallBreakLength := flag.Int("break", 5, "The minutes in a small break")
+	longBreakLength := flag.Int("long", 25, "The minutes in a long break")
+	cycles := flag.Int("cycles", 3, "The amount of work/break cycles")
+	barLength := flag.Int("bar", 30, "The length of the progress bar")
+	flag.Parse()
 
-	args := os.Args[1:]
-	
-	if len(args) > 1 {
-		log.Fatalln("A single cycle number argument is accepted")
+	if *workCycleLength < 1 {
+		log.Fatalln("All cycles must be at least 1 min long")
 	}
-	// Default config
-	
-	if len(args) == 0 {
-		cfg.cycles = 3
-	} else {
-		cycles, err := strconv.Atoi(args[0]) 
-		if err != nil {
-			log.Fatal("Enter an interger as a cycle amount")
-		}
-		cfg.cycles = cycles 
+	if *smallBreakLength < 1 {
+		log.Fatalln("All cycles must be at least 1 min long")
+	}
+	if *longBreakLength < 1 {
+		log.Fatalln("All cycles must be at least 1 min long")
+	}
+
+	cfg := config{
+		workCycleLength:  time.Minute * time.Duration(*workCycleLength),
+		smallBreakLength: time.Minute * time.Duration(*smallBreakLength),
+		longBreakLength:  time.Minute * time.Duration(*longBreakLength),
+		cycles:           *cycles,
+		barLength:        *barLength,
 	}
 
 	for i := range cfg.cycles {
 
-		timer(cfg.work_cycle_length, "Work", i+1)
-		timer(cfg.small_break_length, "Break", i+1)
+		timer(cfg, "Work", i+1)
+		timer(cfg, "Break", i+1)
 	}
-	timer(cfg.long_break_length, "Long break", 0)
+	timer(cfg, "Long break", 0)
 }
