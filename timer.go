@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strings"
 	"time"
+
+	"github.com/gen2brain/beeep"
 )
 
 func timer(config config, cycleType string, iteration int) {
@@ -76,4 +79,7 @@ func timer(config config, cycleType string, iteration int) {
 		}
 	}
 	fmt.Printf("\n%s done!\n", cycleType)
+	if err := beeep.Alert(cycleType, "Done!", "assets/sugo.png"); err != nil {
+		log.Fatalln("Could not send notification:", err)
+	}
 }

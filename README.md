@@ -6,7 +6,7 @@ A simple terminal Pomodoro timer written in Go.
 
 Make sure you have go version > 1.22 installed on your system.
 
-Run ` go get github.com/ywallis/sugo `
+Run ` go install github.com/ywallis/sugo `
 
 ## Usage
 
