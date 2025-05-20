@@ -10,9 +10,22 @@ Run ` go get github.com/ywallis/sugo `
 
 ## Usage
 
-Sugo assumes a default of 25 mins per work cycle and long break, 5 mins per small break.
+Run `sugo` in your terminal to run with default settings
 
-Run `sugo` in your terminal to run a standard of 3 work/break cycles.
+Sugo assumes the following defaults:
 
-Optionally, you can enter another custom number of cycles as an int after sugo
+- A work length of 25 mins
+- A small break length of 5 mins
+- A large break length of 25 mins
+- 3 work/break cycles
+
+The following flags are available as options:
+
+- work 
+- break
+- long
+- cycles
+- bar
+
+Type sugo --help for details
 
