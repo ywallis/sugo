@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -17,7 +16,7 @@ type config struct {
 
 func main() {
 	cfg := config{}
-	cfg.work_cycle_length = time.Minute * 25
+	cfg.work_cycle_length = time.Minute * 1
 	cfg.small_break_length = time.Minute * 5
 	cfg.long_break_length = time.Minute * 25
 
@@ -41,7 +40,7 @@ func main() {
 	for i := range cfg.cycles {
 
 		timer(cfg.work_cycle_length, "Work", i+1)
-		timer(cfg.small_break_length, "Small break", i+1)
+		timer(cfg.small_break_length, "Break", i+1)
 	}
 	timer(cfg.long_break_length, "Long break", 0)
 }
