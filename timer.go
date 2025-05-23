@@ -57,28 +57,28 @@ func timer(config config, cycleType string, iteration int) {
 			strings.Repeat("░", empty),
 		)
 		if cycleType == "Long break" {
-			fmt.Printf(
+			centerText(fmt.Sprintf(
 				"\r%s - %02d:%02d [%s]",
 				cycleType,
 				minutes,
 				seconds,
-				bar)
+				bar))
 		} else {
-			fmt.Printf(
-				"\r%s %d of %d - %02d:%02d [%s]",
+			centerText(fmt.Sprintf(
+				"%s %d of %d - %02d:%02d [%s]",
 				cycleType,
 				iteration,
 				config.cycles,
 				minutes,
 				seconds,
-				bar)
+				bar))
 		}
 
 		if remaining < 0 {
 			break
 		}
 	}
-	fmt.Printf("\n%s done!\n", cycleType)
+	centerText(fmt.Sprintf("\n%s done!\n", cycleType))
 	if err := beeep.Alert(cycleType, "Done!", "assets/sugo.png"); err != nil {
 		log.Fatalln("Could not send notification:", err)
 	}
