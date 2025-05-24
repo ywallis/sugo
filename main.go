@@ -25,6 +25,7 @@ func main() {
 		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 		<-c // Wait for signal
 		fmt.Println("\033[?25h") // show cursor
+		clearScreen()
 		os.Exit(0) // Or use return if you prefer not to force exit
 	}()
 	workCycleLength := flag.Int("work", 25, "The minutes in a work cycle")
