@@ -2,7 +2,11 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -15,6 +19,13 @@ type config struct {
 }
 
 func main() {
+	go func() {
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+		<-c // Wait for signal
+		fmt.Println("\033[?25h")
+		os.Exit(0) // Or use return if you prefer not to force exit
+	}()
 	workCycleLength := flag.Int("work", 25, "The minutes in a work cycle")
 	smallBreakLength := flag.Int("break", 5, "The minutes in a small break")
 	longBreakLength := flag.Int("long", 25, "The minutes in a long break")

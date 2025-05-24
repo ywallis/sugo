@@ -17,6 +17,7 @@ func clearScreen() {
 }
 
 func centerText(text string) {
+
 	width, height, err := term.GetSize(int(os.Stdout.Fd()))
 	if err != nil {
 		fmt.Println("Error getting terminal size:", err)
@@ -28,6 +29,8 @@ func centerText(text string) {
 
 	clearScreen()
 
+	fmt.Print("\033[?25l") // hide cursor
+	// defer fmt.Print("\033[?25h")
 	// Print blank lines for vertical centering
 	for range verticalPadding {
 		fmt.Println()
