@@ -58,7 +58,7 @@ func timer(config config, cycleType string, iteration int) {
 		)
 		if cycleType == "Long break" {
 			centerText(fmt.Sprintf(
-				"\r%s - %02d:%02d [%s]",
+				"%s - %02d:%02d [%s]",
 				cycleType,
 				minutes,
 				seconds,
