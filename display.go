@@ -29,8 +29,6 @@ func centerText(text string) {
 
 	clearScreen()
 
-	fmt.Print("\033[?25l") // hide cursor
-	// defer fmt.Print("\033[?25h")
 	// Print blank lines for vertical centering
 	for range verticalPadding {
 		fmt.Println()

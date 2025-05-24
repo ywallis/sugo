@@ -19,11 +19,12 @@ type config struct {
 }
 
 func main() {
+	fmt.Print("\033[?25l") // hide cursor
 	go func() {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 		<-c // Wait for signal
-		fmt.Println("\033[?25h")
+		fmt.Println("\033[?25h") // show cursor
 		os.Exit(0) // Or use return if you prefer not to force exit
 	}()
 	workCycleLength := flag.Int("work", 25, "The minutes in a work cycle")
