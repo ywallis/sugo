@@ -79,13 +79,18 @@ func timer(config config, cycleType string, iteration int) {
 			break
 		}
 	}
+
 	if err := beeep.Alert(cycleType, "Done!", "assets/sugo.png"); err != nil {
 		log.Fatalln("Could not send notification:", err)
 	}
+
 	clearScreen()
 	verticalAlign()
 	printCenter(fmt.Sprintf("%s done!", cycleType))
-	printCenter("Press enter to continue.")
-	bufio.NewReader(os.Stdin).ReadBytes('\n')
-	time.Sleep(time.Second)
+	if config.confirmToContinue {
+		printCenter("Press enter to continue.")
+		bufio.NewReader(os.Stdin).ReadBytes('\n')
+	} else {
+		time.Sleep(time.Second)
+	}
 }
