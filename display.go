@@ -16,16 +16,14 @@ func clearScreen() {
 	cmd.Run()
 }
 
-func centerText(text string) {
+func verticalAlign() {
 
-	width, height, err := term.GetSize(int(os.Stdout.Fd()))
+	_, height, err := term.GetSize(int(os.Stdout.Fd()))
 	if err != nil {
 		fmt.Println("Error getting terminal size:", err)
 		return
 	}
-
-	lines := strings.Split(text, "\n")
-	verticalPadding := (height - len(lines)) / 2
+	verticalPadding := (height / 2) - 1
 
 	clearScreen()
 
@@ -33,10 +31,20 @@ func centerText(text string) {
 	for range verticalPadding {
 		fmt.Println()
 	}
+}
+func printCenter(text string) {
 
-	for _, line := range lines {
+	width, _, err := term.GetSize(int(os.Stdout.Fd()))
+	if err != nil {
+		fmt.Println("Error getting terminal size:", err)
+		return
+	}
+
+	lines := strings.SplitSeq(text, "\n")
+
+	for line := range lines {
 		lineWidth := utf8.RuneCountInString(line)
-		horizPad := max((width - lineWidth) / 2, 0)
-		fmt.Printf("%s%s\n", strings.Repeat(" ", horizPad), line)
+		horizPad := max((width-lineWidth)/2, 0)
+		fmt.Printf("\r%s%s", strings.Repeat(" ", horizPad), line)
 	}
 }

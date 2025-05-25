@@ -11,11 +11,12 @@ import (
 )
 
 type config struct {
-	workCycleLength  time.Duration
-	smallBreakLength time.Duration
-	longBreakLength  time.Duration
-	cycles           int
-	barLength        int
+	workCycleLength   time.Duration
+	smallBreakLength  time.Duration
+	longBreakLength   time.Duration
+	cycles            int
+	barLength         int
+	confirmToContinue bool
 }
 
 func main() {
@@ -23,7 +24,7 @@ func main() {
 	go func() {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
-		<-c // Wait for signal
+		<-c                      // Wait for signal
 		fmt.Println("\033[?25h") // show cursor
 		clearScreen()
 		os.Exit(0) // Or use return if you prefer not to force exit
@@ -33,6 +34,7 @@ func main() {
 	longBreakLength := flag.Int("long", 25, "The minutes in a long break")
 	cycles := flag.Int("cycles", 3, "The amount of work/break cycles")
 	barLength := flag.Int("bar", 30, "The length of the progress bar")
+	confirmToContinue := flag.Bool("confirm", false, "Confirm to continur to next cycle")
 	flag.Parse()
 
 	if *workCycleLength < 1 {
@@ -46,11 +48,12 @@ func main() {
 	}
 
 	cfg := config{
-		workCycleLength:  time.Minute * time.Duration(*workCycleLength),
-		smallBreakLength: time.Minute * time.Duration(*smallBreakLength),
-		longBreakLength:  time.Minute * time.Duration(*longBreakLength),
-		cycles:           *cycles,
-		barLength:        *barLength,
+		workCycleLength:   time.Minute * time.Duration(*workCycleLength),
+		smallBreakLength:  time.Minute * time.Duration(*smallBreakLength),
+		longBreakLength:   time.Minute * time.Duration(*longBreakLength),
+		cycles:            *cycles,
+		barLength:         *barLength,
+		confirmToContinue: *confirmToContinue,
 	}
 
 	for i := range cfg.cycles {

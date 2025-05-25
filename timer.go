@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"time"
 
@@ -21,9 +23,8 @@ func timer(config config, cycleType string, iteration int) {
 		duration = config.longBreakLength
 	}
 
-	// Weird ass screen clear
-	fmt.Print("\033[H\033[2J")
 	totalSeconds := int(duration.Seconds())
+	verticalAlign()
 
 	ticker := time.NewTicker(time.Second)
 	defer ticker.Stop()
@@ -57,14 +58,14 @@ func timer(config config, cycleType string, iteration int) {
 			strings.Repeat("░", empty),
 		)
 		if cycleType == "Long break" {
-			centerText(fmt.Sprintf(
+			printCenter(fmt.Sprintf(
 				"%s - %02d:%02d [%s]",
 				cycleType,
 				minutes,
 				seconds,
 				bar))
 		} else {
-			centerText(fmt.Sprintf(
+			printCenter(fmt.Sprintf(
 				"%s %d of %d - %02d:%02d [%s]",
 				cycleType,
 				iteration,
@@ -78,8 +79,13 @@ func timer(config config, cycleType string, iteration int) {
 			break
 		}
 	}
-	centerText(fmt.Sprintf("\n%s done!\n", cycleType))
 	if err := beeep.Alert(cycleType, "Done!", "assets/sugo.png"); err != nil {
 		log.Fatalln("Could not send notification:", err)
 	}
+	clearScreen()
+	verticalAlign()
+	printCenter(fmt.Sprintf("%s done!", cycleType))
+	printCenter("Press enter to continue.")
+	bufio.NewReader(os.Stdin).ReadBytes('\n')
+	time.Sleep(time.Second)
 }
