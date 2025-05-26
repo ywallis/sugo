@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"log"
@@ -21,7 +22,7 @@ type config struct {
 
 func main() {
 	fmt.Print("\033[?25l") // hide cursor
-	
+
 	go func() {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, syscall.SIGTERM)
@@ -30,13 +31,13 @@ func main() {
 		clearScreen()
 		os.Exit(0) // Or use return if you prefer not to force exit
 	}()
-	
+
 	workCycleLength := flag.Int("work", 25, "The minutes in a work cycle")
 	smallBreakLength := flag.Int("break", 5, "The minutes in a small break")
 	longBreakLength := flag.Int("long", 25, "The minutes in a long break")
 	cycles := flag.Int("cycles", 3, "The amount of work/break cycles")
 	barLength := flag.Int("bar", 30, "The length of the progress bar")
-	confirmToContinue := flag.Bool("confirm", false, "Confirm to continur to next cycle")
+	confirmToContinue := flag.Bool("confirm", true, "Confirm to continur to next cycle")
 	flag.Parse()
 
 	if *workCycleLength < 1 {
@@ -64,4 +65,7 @@ func main() {
 		timer(cfg, "Break", i+1)
 	}
 	timer(cfg, "Long break", 0)
+	printCenter("Press enter to continue.")
+	bufio.NewReader(os.Stdin).ReadBytes('\n')
+	clearScreen()
 }
