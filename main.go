@@ -67,5 +67,6 @@ func main() {
 	timer(cfg, "Long break", 0)
 	printCenter("Press enter to continue.")
 	bufio.NewReader(os.Stdin).ReadBytes('\n')
+	fmt.Println("\033[?25h") // show cursor
 	clearScreen()
 }
